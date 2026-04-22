@@ -5,7 +5,7 @@ description: >-
   Self-hosted bridge that mirrors devices from a Datacake workspace into
   Home Assistant via MQTT Discovery. GraphQL for inventory, Datacake MQTT
   for live values, Home Assistant MQTT for discovery + state + availability.
-url: https://github.com/YOUR_GITHUB_USER/datacake-homeassistant-mqtt-bridge
+url: https://github.com/simmikolon/datacake-homeassistant-mqtt-bridge
 arch:
   - amd64
   - aarch64
@@ -42,4 +42,4 @@ schema:
 # .github/workflows/publish-addon.yml), uncomment the line below and comment
 # out the `build.yaml` path so Supervisor pulls the ready-made image instead
 # of building locally. Local build is the default to keep the setup simple.
-# image: ghcr.io/YOUR_GITHUB_USER/datacake-bridge-{arch}
+# image: ghcr.io/simmikolon/datacake-bridge-{arch}

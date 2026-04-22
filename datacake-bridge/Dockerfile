@@ -5,7 +5,7 @@ FROM ${BUILD_FROM} AS runtime
 # Git revision of the bridge source to build. Override via `build.yaml`'s
 # `args:` map (e.g. pin to a release tag) or let Supervisor pass it in.
 ARG SOURCE_REF=main
-ARG SOURCE_REPO=https://github.com/YOUR_GITHUB_USER/datacake-homeassistant-mqtt-bridge.git
+ARG SOURCE_REPO=https://github.com/simmikolon/datacake-homeassistant-mqtt-bridge.git
 
 # Install Node.js, the toolchain `better-sqlite3` needs to build its native
 # addon, and `tini` as PID 1 so signals land on the Node process correctly.

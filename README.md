@@ -265,18 +265,20 @@ with the repository-level manifest at [`repository.yaml`](repository.yaml).
 
 ### Install
 
-1. Fork this repository on GitHub (or publish your own clone).
-2. Replace `YOUR_GITHUB_USER` in [`repository.yaml`](repository.yaml),
-   [`datacake-bridge/config.yaml`](datacake-bridge/config.yaml),
-   [`datacake-bridge/build.yaml`](datacake-bridge/build.yaml) and
-   [`datacake-bridge/Dockerfile`](datacake-bridge/Dockerfile) with your GitHub
-   username (for the `git clone` at build time).
-3. In Home Assistant go to *Settings → Add-ons → Add-on Store → ⋮ → Repositories*
-   and paste your repo URL. Hit *Reload*.
-4. The "Datacake → Home Assistant Bridge" card appears. Click *Install*.
+1. In Home Assistant go to *Settings → Add-ons → Add-on Store → ⋮ → Repositories*
+   and paste `https://github.com/simmikolon/datacake-homeassistant-mqtt-bridge`.
+   Hit *Reload*.
+2. The "Datacake → Home Assistant Bridge" card appears. Click *Install*.
    The Supervisor builds the image locally from source (takes a few minutes).
-5. *Start* the add-on. *Open Web UI* (via the card) lands you in the
+3. *Start* the add-on. *Open Web UI* (via the card) lands you in the
    Tailwind settings page — authenticated via your HA session.
+
+If you fork this repository, replace `simmikolon` in
+[`repository.yaml`](repository.yaml),
+[`datacake-bridge/config.yaml`](datacake-bridge/config.yaml),
+[`datacake-bridge/build.yaml`](datacake-bridge/build.yaml) and
+[`datacake-bridge/Dockerfile`](datacake-bridge/Dockerfile) with your own GitHub
+username so the Supervisor clones from your fork at build time.
 
 ### What the add-on gives you on top of plain Docker
 
@@ -298,7 +300,7 @@ Local Supervisor builds take 2–5 minutes per arch. If you want users to
 install in seconds, publish prebuilt images to GHCR via the provided
 GitHub Actions workflow [`.github/workflows/publish-addon.yml`](.github/workflows/publish-addon.yml)
 (triggered by pushing a `v0.x.y` tag). Then uncomment the
-`image: ghcr.io/YOUR_GITHUB_USER/datacake-bridge-{arch}` line in
+`image: ghcr.io/simmikolon/datacake-bridge-{arch}` line in
 [`datacake-bridge/config.yaml`](datacake-bridge/config.yaml) and the
 Supervisor will pull the ready-made image instead of building.
 

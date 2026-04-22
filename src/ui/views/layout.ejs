@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-100">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <%# Resolves every relative link/form in the app against the ingress
+       prefix when running as a Home Assistant add-on, and against `/` for
+       standalone Docker use. The middleware in webServer.ts guarantees the
+       value always ends in `/`. %>
+    <base href="<%= typeof ingressPath !== 'undefined' ? ingressPath : '/' %>" />
+    <title><%= title %> · Datacake HA Bridge</title>
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body class="min-h-full text-slate-800">
+    <header class="bg-slate-900 text-white">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="." class="font-semibold tracking-tight">Datacake → HA Bridge</a>
+        <nav class="flex gap-4 text-sm">
+          <a href="." class="<%= nav === 'dashboard' ? 'text-white' : 'text-slate-300 hover:text-white' %>">Dashboard</a>
+          <a href="settings" class="<%= nav === 'settings' ? 'text-white' : 'text-slate-300 hover:text-white' %>">Settings</a>
+          <a href="devices" class="<%= nav === 'devices' ? 'text-white' : 'text-slate-300 hover:text-white' %>">Devices</a>
+          <a href="status" class="<%= nav === 'status' ? 'text-white' : 'text-slate-300 hover:text-white' %>">Status</a>
+          <a href="logs" class="<%= nav === 'logs' ? 'text-white' : 'text-slate-300 hover:text-white' %>">Logs</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-6">
+      <% if (typeof flash !== 'undefined' && flash) { %>
+        <div class="mb-4 rounded-md border px-4 py-3 text-sm
+          <%= flash.type === 'error' ? 'bg-rose-50 border-rose-200 text-rose-800' : '' %>
+          <%= flash.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : '' %>
+          <%= flash.type === 'info' ? 'bg-sky-50 border-sky-200 text-sky-800' : '' %>">
+          <%= flash.message %>
+        </div>
+      <% } %>
+
+      <%- body %>
+    </main>
+
+    <footer class="max-w-6xl mx-auto px-4 py-6 text-xs text-slate-500">
+      Datacake HA Bridge · MVP
+    </footer>
+  </body>
+</html>

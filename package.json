@@ -1,0 +1,39 @@
+{
+  "name": "datacake-homeassistant-mqtt-bridge",
+  "version": "0.1.0",
+  "description": "Self-hosted bridge that publishes Datacake devices to Home Assistant via MQTT Discovery.",
+  "private": true,
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build:ts": "tsc -p tsconfig.json",
+    "build:css": "tailwindcss -i ./src/ui/public/css/tailwind.css -o ./dist/public/css/app.css --minify",
+    "build:views": "node scripts/copy-views.js",
+    "build": "npm run build:ts && npm run build:views && npm run build:css",
+    "start": "node dist/index.js",
+    "dev:ts": "tsc -p tsconfig.json --watch",
+    "dev:css": "tailwindcss -i ./src/ui/public/css/tailwind.css -o ./dist/public/css/app.css --watch",
+    "dev": "npm run build:views && npm run build:css && npm run build:ts && node dist/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "mqtt": "^5.10.1",
+    "pino": "^9.5.0",
+    "pino-pretty": "^11.2.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/ejs": "^3.1.5",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.7.4",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.2"
+  }
+}

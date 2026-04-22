@@ -1,0 +1,52 @@
+<h1 class="text-2xl font-semibold mb-4">Status</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div class="card">
+    <div class="card-header">Bridge</div>
+    <div class="card-body text-sm space-y-1">
+      <div>Running: <%= status.running ? 'yes' : 'no' %></div>
+      <div>Devices in registry: <%= status.devices %></div>
+      <div>Selected devices: <%= status.selectedDevices %></div>
+      <div>Exported entities: <%= status.exportedEntities %></div>
+      <div>Last inventory sync: <%= lastSyncText %></div>
+      <% if (status.lastSyncError) { %>
+        <div class="text-rose-600">Error: <%= status.lastSyncError %></div>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Datacake MQTT</div>
+    <div class="card-body text-sm space-y-1">
+      <div>Connected: <%= status.datacakeMqtt.connected ? 'yes' : 'no' %></div>
+      <div>Active subscriptions: <%= status.datacakeMqtt.subscriptions %></div>
+      <div>Last event: <%= lastEventText %></div>
+      <% if (status.datacakeMqtt.lastError) { %>
+        <div class="text-rose-600">Last error: <%= status.datacakeMqtt.lastError %></div>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Home Assistant MQTT</div>
+    <div class="card-body text-sm space-y-1">
+      <div>Connected: <%= status.haMqtt.connected ? 'yes' : 'no' %></div>
+      <div>Last publish: <%= lastPublishText %></div>
+      <% if (status.haMqtt.lastError) { %>
+        <div class="text-rose-600">Last error: <%= status.haMqtt.lastError %></div>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Actions</div>
+    <div class="card-body flex flex-wrap gap-2">
+      <form method="post" action="devices/sync">
+        <button class="btn-primary" type="submit">Sync inventory</button>
+      </form>
+      <form method="post" action="status/reannounce">
+        <button class="btn-secondary" type="submit">Re-publish discovery</button>
+      </form>
+    </div>
+  </div>
+</div>

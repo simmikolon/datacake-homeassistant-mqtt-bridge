@@ -1,0 +1,81 @@
+<div class="flex items-center justify-between mb-4">
+  <div>
+    <p class="text-xs text-slate-500"><a href="devices" class="hover:underline">← Back to devices</a></p>
+    <h1 class="text-2xl font-semibold"><%= device.verboseName %></h1>
+    <p class="text-xs text-slate-500 font-mono"><%= device.id %> · <%= device.productSlug %></p>
+  </div>
+  <div>
+    <% if (device.selected) { %>
+      <span class="badge-green">device selected</span>
+    <% } else { %>
+      <span class="badge-amber">device not selected</span>
+    <% } %>
+  </div>
+</div>
+
+<form method="post" action="devices/<%= device.id %>/fields" class="card">
+  <div class="card-header flex items-center justify-between">
+    <span><%= fields.length %> fields</span>
+    <button class="btn-primary" type="submit">Save field configuration</button>
+  </div>
+  <div class="px-4 py-2 bg-slate-50 border-b border-slate-200 text-xs text-slate-500">
+    Override JSON: only HA entity metadata is honoured
+    (<code>name</code>, <code>icon</code>, <code>device_class</code>,
+    <code>unit_of_measurement</code>, <code>state_class</code>,
+    <code>entity_category</code>, <code>payload_on</code>/<code>payload_off</code>,
+    <code>object_id</code>, <code>value_template</code>,
+    <code>expire_after</code>, <code>force_update</code>,
+    <code>suggested_display_precision</code>, <code>enabled_by_default</code>).
+    Topic / availability / device keys are managed by the bridge and will be
+    silently dropped if included in the override.
+  </div>
+  <div class="card-body overflow-x-auto">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>Type</th>
+          <th>Semantic</th>
+          <th>Mapped to</th>
+          <th>Export</th>
+          <th>Diagnostic</th>
+          <th>Override (JSON)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (const f of fields) { %>
+          <tr>
+            <td class="font-mono text-xs"><%= f.fieldName %></td>
+            <td class="text-xs"><%= f.fieldType %></td>
+            <td class="text-xs"><%= f.semantic || '—' %></td>
+            <td class="text-xs">
+              <% if (f.ignore) { %>
+                <span class="badge-slate">ignored by mapping</span>
+              <% } else { %>
+                <span class="badge-slate"><%= f.component %></span>
+                <% if (f.deviceClass) { %><span class="text-slate-400 ml-1">· <%= f.deviceClass %></span><% } %>
+                <% if (f.unit) { %><span class="text-slate-400 ml-1">· <%= f.unit %></span><% } %>
+              <% } %>
+            </td>
+            <td>
+              <input type="hidden" name="fields[<%= f.fieldName %>][__submitted]" value="1" />
+              <input type="checkbox" name="fields[<%= f.fieldName %>][enabled]" value="on"
+                     <%= f.enabled ? 'checked' : '' %>
+                     <%= f.ignore ? 'disabled' : '' %> />
+            </td>
+            <td>
+              <input type="checkbox" name="fields[<%= f.fieldName %>][diagnostic]" value="on"
+                     <%= f.diagnostic ? 'checked' : '' %>
+                     <%= f.ignore ? 'disabled' : '' %> />
+            </td>
+            <td class="min-w-[240px]">
+              <textarea class="input font-mono text-xs" rows="2"
+                        name="fields[<%= f.fieldName %>][override]"
+                        placeholder='{"name":"…","unit_of_measurement":"…"}'><%= f.overrideJson || '' %></textarea>
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</form>

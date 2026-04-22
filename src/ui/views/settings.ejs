@@ -1,0 +1,136 @@
+<h1 class="text-2xl font-semibold mb-4">Settings</h1>
+
+<form method="post" action="settings" class="space-y-6" autocomplete="off">
+  <div class="card">
+    <div class="card-header">Datacake API</div>
+    <div class="card-body grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="md:col-span-2">
+        <label class="label" for="datacake.endpoint">GraphQL endpoint</label>
+        <input class="input font-mono text-xs" id="datacake.endpoint" name="datacake.endpoint"
+               value="<%= settings.datacake.endpoint %>"
+               placeholder="https://api.datacake.co/graphql/" />
+      </div>
+      <div>
+        <label class="label" for="datacake.token">API token</label>
+        <input class="input" id="datacake.token" name="datacake.token" type="password"
+               autocomplete="new-password" spellcheck="false"
+               placeholder="<%= settings.datacake.token ? '•••••• (stored)' : 'Datacake API token' %>" />
+        <% if (settings.datacake.token) { %>
+          <label class="mt-1 flex items-center gap-2 text-xs text-slate-500">
+            <input type="checkbox" name="datacake.clearToken" value="on" />
+            Clear stored token
+          </label>
+        <% } %>
+      </div>
+      <div>
+        <label class="label" for="datacake.workspaceId">Workspace ID</label>
+        <input class="input font-mono text-xs" id="datacake.workspaceId" name="datacake.workspaceId"
+               value="<%= settings.datacake.workspaceId %>" placeholder="uuid" />
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Datacake Realtime MQTT</div>
+    <div class="card-body grid grid-cols-1 md:grid-cols-2 gap-4">
+      <input type="hidden" name="datacakeMqtt.__submitted" value="1" />
+      <div class="md:col-span-2">
+        <label class="label" for="datacakeMqtt.url">Broker URL</label>
+        <input class="input font-mono text-xs" id="datacakeMqtt.url" name="datacakeMqtt.url"
+               value="<%= settings.datacakeMqtt.url %>"
+               placeholder="mqtts://mqtt.datacake.co:8883" />
+      </div>
+      <div>
+        <label class="label" for="datacakeMqtt.username">Username</label>
+        <input class="input" id="datacakeMqtt.username" name="datacakeMqtt.username"
+               autocomplete="off" spellcheck="false"
+               value="<%= settings.datacakeMqtt.username %>" />
+      </div>
+      <div>
+        <label class="label" for="datacakeMqtt.password">Password</label>
+        <input class="input" id="datacakeMqtt.password" name="datacakeMqtt.password" type="password"
+               autocomplete="new-password" spellcheck="false"
+               placeholder="<%= settings.datacakeMqtt.password ? '•••••• (stored)' : '(leave empty for anonymous)' %>" />
+        <% if (settings.datacakeMqtt.password) { %>
+          <label class="mt-1 flex items-center gap-2 text-xs text-slate-500">
+            <input type="checkbox" name="datacakeMqtt.clearPassword" value="on" />
+            Clear stored password (connect anonymously)
+          </label>
+        <% } %>
+      </div>
+      <div>
+        <label class="label" for="datacakeMqtt.clientId">Client ID (optional)</label>
+        <input class="input" id="datacakeMqtt.clientId" name="datacakeMqtt.clientId"
+               value="<%= settings.datacakeMqtt.clientId %>" />
+      </div>
+      <div class="flex items-end gap-2">
+        <label class="flex items-center gap-2 text-sm">
+          <input type="checkbox" name="datacakeMqtt.rejectUnauthorized" value="on"
+                 <%= settings.datacakeMqtt.rejectUnauthorized ? 'checked' : '' %> />
+          Verify TLS certificate
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Home Assistant MQTT</div>
+    <div class="card-body grid grid-cols-1 md:grid-cols-2 gap-4">
+      <input type="hidden" name="haMqtt.__submitted" value="1" />
+      <div class="md:col-span-2">
+        <label class="label" for="haMqtt.url">Broker URL</label>
+        <input class="input font-mono text-xs" id="haMqtt.url" name="haMqtt.url"
+               value="<%= settings.haMqtt.url %>"
+               placeholder="mqtt://homeassistant.local:1883" />
+      </div>
+      <div>
+        <label class="label" for="haMqtt.username">Username</label>
+        <input class="input" id="haMqtt.username" name="haMqtt.username"
+               autocomplete="off" spellcheck="false"
+               value="<%= settings.haMqtt.username %>" />
+      </div>
+      <div>
+        <label class="label" for="haMqtt.password">Password</label>
+        <input class="input" id="haMqtt.password" name="haMqtt.password" type="password"
+               autocomplete="new-password" spellcheck="false"
+               placeholder="<%= settings.haMqtt.password ? '•••••• (stored)' : '(leave empty for anonymous)' %>" />
+        <% if (settings.haMqtt.password) { %>
+          <label class="mt-1 flex items-center gap-2 text-xs text-slate-500">
+            <input type="checkbox" name="haMqtt.clearPassword" value="on" />
+            Clear stored password (connect anonymously)
+          </label>
+        <% } %>
+      </div>
+      <div>
+        <label class="label" for="haMqtt.clientId">Client ID (optional)</label>
+        <input class="input" id="haMqtt.clientId" name="haMqtt.clientId"
+               value="<%= settings.haMqtt.clientId %>" />
+      </div>
+      <div class="flex items-end gap-2">
+        <label class="flex items-center gap-2 text-sm">
+          <input type="checkbox" name="haMqtt.rejectUnauthorized" value="on"
+                 <%= settings.haMqtt.rejectUnauthorized ? 'checked' : '' %> />
+          Verify TLS certificate
+        </label>
+      </div>
+      <div>
+        <label class="label" for="discoveryPrefix">HA Discovery prefix</label>
+        <input class="input" id="discoveryPrefix" name="discoveryPrefix"
+               value="<%= settings.discoveryPrefix %>" placeholder="homeassistant" />
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-2">
+    <button class="btn-primary" type="submit">Save settings</button>
+    <button class="btn-secondary" type="submit" formaction="settings/test-graphql" formmethod="post">
+      Test Datacake API
+    </button>
+    <button class="btn-secondary" type="submit" formaction="settings/test-mqtt-datacake" formmethod="post">
+      Test Datacake MQTT
+    </button>
+    <button class="btn-secondary" type="submit" formaction="settings/test-mqtt-ha" formmethod="post">
+      Test HA MQTT
+    </button>
+  </div>
+</form>

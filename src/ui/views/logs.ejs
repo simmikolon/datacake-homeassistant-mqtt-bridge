@@ -1,0 +1,20 @@
+<h1 class="text-2xl font-semibold mb-4">Logs</h1>
+
+<div class="card">
+  <div class="card-header flex items-center justify-between">
+    <span><%= entries.length %> most recent entries</span>
+    <a href="logs" class="btn-secondary">Refresh</a>
+  </div>
+  <div class="card-body">
+    <% if (!entries.length) { %>
+      <p class="text-sm text-slate-600">No log entries yet.</p>
+    <% } else { %>
+      <pre class="text-xs font-mono bg-slate-900 text-slate-100 p-3 rounded-md overflow-x-auto max-h-[60vh]"><%
+        for (const e of entries) {
+          %><%= new Date(e.time).toISOString() %> [<%= e.level.toUpperCase().padEnd(5) %>] <%= e.module ? '(' + e.module + ') ' : '' %><%= e.msg %><% if (e.err) { %> — <%= e.err %><% } %>
+<%
+        }
+      %></pre>
+    <% } %>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+<h1 class="text-2xl font-semibold mb-4">Dashboard</h1>
+
+<% if (!configured) { %>
+  <div class="card mb-6">
+    <div class="card-header">Welcome</div>
+    <div class="card-body text-sm text-slate-600 space-y-2">
+      <p>The bridge is running but not fully configured yet.</p>
+      <p>
+        Start by entering your Datacake API credentials, Datacake MQTT credentials and
+        your Home Assistant MQTT broker details on the
+        <a class="text-indigo-600 hover:underline" href="settings">Settings</a> page.
+      </p>
+    </div>
+  </div>
+<% } %>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <div class="card">
+    <div class="card-header">Datacake API</div>
+    <div class="card-body">
+      <p class="text-sm">Workspace: <span class="font-mono"><%= settings.datacake.workspaceId || '—' %></span></p>
+      <p class="text-sm">Endpoint: <span class="font-mono text-xs"><%= settings.datacake.endpoint %></span></p>
+      <p class="text-sm mt-2">Last sync: <%= lastSyncText %></p>
+      <% if (lastSyncError) { %>
+        <p class="text-xs text-rose-600 mt-1">Error: <%= lastSyncError %></p>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Datacake MQTT</div>
+    <div class="card-body">
+      <p class="text-sm">
+        <% if (status.datacakeMqtt.connected) { %>
+          <span class="badge-green">connected</span>
+        <% } else { %>
+          <span class="badge-red">disconnected</span>
+        <% } %>
+      </p>
+      <p class="text-sm mt-2">Subscriptions: <%= status.datacakeMqtt.subscriptions %></p>
+      <% if (status.datacakeMqtt.lastError) { %>
+        <p class="text-xs text-rose-600 mt-1"><%= status.datacakeMqtt.lastError %></p>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Home Assistant MQTT</div>
+    <div class="card-body">
+      <p class="text-sm">
+        <% if (status.haMqtt.connected) { %>
+          <span class="badge-green">connected</span>
+        <% } else { %>
+          <span class="badge-red">disconnected</span>
+        <% } %>
+      </p>
+      <p class="text-sm mt-2">Exported entities: <%= status.exportedEntities %></p>
+      <% if (status.haMqtt.lastError) { %>
+        <p class="text-xs text-rose-600 mt-1"><%= status.haMqtt.lastError %></p>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Quick actions</div>
+  <div class="card-body flex flex-wrap gap-2">
+    <form method="post" action="devices/sync">
+      <button class="btn-primary" type="submit">Sync inventory</button>
+    </form>
+    <a href="devices" class="btn-secondary">Manage devices</a>
+    <a href="status" class="btn-secondary">System status</a>
+  </div>
+</div>

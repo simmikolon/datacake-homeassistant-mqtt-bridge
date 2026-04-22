@@ -1,0 +1,45 @@
+name: Datacake → Home Assistant Bridge
+version: "0.1.0"
+slug: datacake_bridge
+description: >-
+  Self-hosted bridge that mirrors devices from a Datacake workspace into
+  Home Assistant via MQTT Discovery. GraphQL for inventory, Datacake MQTT
+  for live values, Home Assistant MQTT for discovery + state + availability.
+url: https://github.com/YOUR_GITHUB_USER/datacake-homeassistant-mqtt-bridge
+arch:
+  - amd64
+  - aarch64
+  - armv7
+  - armhf
+startup: services
+boot: auto
+init: false
+# Expose the admin UI through Home Assistant's Ingress proxy. The operator
+# opens the add-on card in Supervisor and lands in our Tailwind settings/
+# devices/status pages, authenticated via their HA session — no external port
+# exposure, no separate login.
+ingress: true
+ingress_port: 3000
+ingress_stream: false
+panel_icon: mdi:bridge
+panel_title: Datacake Bridge
+# `mqtt:need` makes the Supervisor publish the running MQTT broker's host,
+# port and credentials to `http://supervisor/services/mqtt`. Our
+# `supervisorBootstrap.ts` reads that on first boot so the HA MQTT section of
+# the settings page is prefilled automatically.
+services:
+  - mqtt:need
+# The bridge persists its SQLite database and runtime state under /data which
+# HA-OS mounts as a dedicated per-add-on volume.
+map: []
+options:
+  log_level: info
+  log_buffer_size: 500
+schema:
+  log_level: list(trace|debug|info|warn|error)
+  log_buffer_size: int(50,5000)
+# If you publish prebuilt multi-arch images to GHCR (see
+# .github/workflows/publish-addon.yml), uncomment the line below and comment
+# out the `build.yaml` path so Supervisor pulls the ready-made image instead
+# of building locally. Local build is the default to keep the setup simple.
+# image: ghcr.io/YOUR_GITHUB_USER/datacake-bridge-{arch}

@@ -1,0 +1,38 @@
+services:
+  bridge:
+    build: .
+    # Or use a pre-built image after publishing:
+    # image: ghcr.io/<you>/datacake-ha-bridge:latest
+    container_name: datacake-ha-bridge
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: "3000"
+      DB_PATH: "/data/bridge.db"
+      LOG_LEVEL: "info"
+      LOG_BUFFER_SIZE: "500"
+    volumes:
+      - bridge-data:/data
+    # Uncomment when running the bundled Mosquitto for local experiments:
+    # depends_on:
+    #   - mosquitto
+
+  # Optional: local Mosquitto broker to try the bridge without a real HA instance.
+  # Remove this service when you target your real Home Assistant MQTT broker.
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: datacake-ha-bridge-mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./deploy/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto-data:/mosquitto/data
+      - mosquitto-log:/mosquitto/log
+    profiles: ["local-broker"]
+
+volumes:
+  bridge-data: {}
+  mosquitto-data: {}
+  mosquitto-log: {}

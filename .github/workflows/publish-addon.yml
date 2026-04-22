@@ -1,0 +1,77 @@
+name: Publish HA Add-on
+
+# Optional: publishes the add-on image to GHCR as a multi-arch bundle so users
+# can install without a local build. Triggered manually or on version tags.
+# If you prefer local builds (HA Supervisor building from source), you can
+# delete this workflow — the add-on's Dockerfile works either way.
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*.*.*"
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_BASE: ${{ github.repository_owner }}/datacake-bridge
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - { name: amd64, platform: linux/amd64, base: "ghcr.io/home-assistant/amd64-base:3.19" }
+          - { name: aarch64, platform: linux/arm64, base: "ghcr.io/home-assistant/aarch64-base:3.19" }
+          - { name: armv7, platform: linux/arm/v7, base: "ghcr.io/home-assistant/armv7-base:3.19" }
+          - { name: armhf, platform: linux/arm/v6, base: "ghcr.io/home-assistant/armhf-base:3.19" }
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            echo "value=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=dev-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./datacake-bridge
+          file: ./datacake-bridge/Dockerfile
+          platforms: ${{ matrix.arch.platform }}
+          push: true
+          build-args: |
+            BUILD_FROM=${{ matrix.arch.base }}
+            SOURCE_REF=${{ github.sha }}
+            SOURCE_REPO=https://github.com/${{ github.repository }}.git
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}-${{ matrix.arch.name }}:${{ steps.version.outputs.value }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}-${{ matrix.arch.name }}:latest
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.version=${{ steps.version.outputs.value }}
+            org.opencontainers.image.revision=${{ github.sha }}

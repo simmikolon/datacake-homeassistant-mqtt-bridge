@@ -1,0 +1,15 @@
+build_from:
+  amd64: ghcr.io/home-assistant/amd64-base:3.19
+  aarch64: ghcr.io/home-assistant/aarch64-base:3.19
+  armv7: ghcr.io/home-assistant/armv7-base:3.19
+  armhf: ghcr.io/home-assistant/armhf-base:3.19
+args:
+  # Source revision to clone at build time. Supervisor injects the add-on
+  # version by default; override to a specific git tag or commit SHA to pin
+  # older releases, or to `main` during development.
+  SOURCE_REF: main
+labels:
+  org.opencontainers.image.title: datacake-bridge
+  org.opencontainers.image.description: Datacake → Home Assistant MQTT bridge
+  org.opencontainers.image.source: https://github.com/YOUR_GITHUB_USER/datacake-homeassistant-mqtt-bridge
+  org.opencontainers.image.licenses: MIT

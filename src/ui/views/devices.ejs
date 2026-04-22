@@ -1,0 +1,84 @@
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-2xl font-semibold">Devices</h1>
+  <form method="post" action="devices/sync">
+    <button class="btn-primary" type="submit">Sync inventory</button>
+  </form>
+</div>
+
+<% if (!devices.length) { %>
+  <div class="card">
+    <div class="card-body text-sm text-slate-600">
+      No devices found. Configure your Datacake API in
+      <a class="text-indigo-600 hover:underline" href="settings">Settings</a> and click
+      <em>Sync inventory</em>.
+    </div>
+  </div>
+<% } else { %>
+  <form method="post" action="devices/select" class="card">
+    <div class="card-header flex items-center justify-between">
+      <span><%= devices.length %> devices · <%= selectedCount %> selected</span>
+      <div class="flex gap-2">
+        <button type="button" class="btn-secondary" data-toggle="all-on">Select all</button>
+        <button type="button" class="btn-secondary" data-toggle="all-off">Select none</button>
+        <button type="submit" class="btn-primary">Save selection</button>
+      </div>
+    </div>
+    <div class="card-body overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="w-10"><input type="checkbox" id="master-toggle" /></th>
+            <th>Name</th>
+            <th>Product</th>
+            <th>Fields</th>
+            <th>Online</th>
+            <th>Device ID</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (const d of devices) { %>
+            <tr>
+              <td>
+                <input type="checkbox" name="selected" value="<%= d.id %>"
+                       class="device-select" <%= d.selected ? 'checked' : '' %> />
+              </td>
+              <td class="font-medium"><%= d.verboseName %></td>
+              <td class="font-mono text-xs"><%= d.productSlug %></td>
+              <td><%= d.fieldCount %></td>
+              <td>
+                <% if (d.online) { %>
+                  <span class="badge-green">online</span>
+                <% } else { %>
+                  <span class="badge-red">offline</span>
+                <% } %>
+              </td>
+              <td class="font-mono text-xs text-slate-500"><%= d.id %></td>
+              <td>
+                <a class="text-indigo-600 hover:underline text-sm" href="devices/<%= d.id %>/fields">Fields →</a>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </form>
+<% } %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const master = document.getElementById('master-toggle');
+    const items = document.querySelectorAll('.device-select');
+    if (master) {
+      master.addEventListener('change', () => {
+        items.forEach((el) => (el.checked = master.checked));
+      });
+    }
+    document.querySelectorAll('[data-toggle]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const on = btn.getAttribute('data-toggle') === 'all-on';
+        items.forEach((el) => (el.checked = on));
+      });
+    });
+  });
+</script>

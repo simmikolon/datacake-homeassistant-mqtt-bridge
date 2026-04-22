@@ -1,0 +1,23 @@
+{
+  "_comment": "Reference only. The bridge persists settings in SQLite via the /settings UI page. This file shows the shape the DB stores.",
+  "datacake": {
+    "endpoint": "https://api.datacake.co/graphql/",
+    "token": "dtck_api_token_here",
+    "workspaceId": "c251d352-cca6-45bd-a444-fd2d590a3ba7"
+  },
+  "datacakeMqtt": {
+    "url": "mqtts://mqtt.datacake.co:8883",
+    "username": "your-datacake-mqtt-username",
+    "password": "your-datacake-mqtt-password",
+    "clientId": "datacake-bridge",
+    "rejectUnauthorized": true
+  },
+  "haMqtt": {
+    "url": "mqtt://homeassistant.local:1883",
+    "username": "mqtt-user",
+    "password": "mqtt-password",
+    "clientId": "datacake-ha-bridge",
+    "rejectUnauthorized": true
+  },
+  "discoveryPrefix": "homeassistant"
+}

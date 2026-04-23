@@ -1,7 +1,13 @@
 import { z } from "zod";
 
+// Schemas deliberately allow empty strings for every credential/URL field so
+// that intermediate states (e.g. first boot, partial form submission, add-on
+// bootstrap writing only the HA MQTT section before the user has supplied
+// Datacake credentials) are structurally valid. Whether the bridge has enough
+// information to actually start is determined by `configService.isConfigured()`
+// at runtime, not by the schema.
 export const MqttSettingsSchema = z.object({
-  url: z.string().trim().min(1, "MQTT URL is required"),
+  url: z.string().trim().default(""),
   username: z.string().optional().default(""),
   password: z.string().optional().default(""),
   clientId: z.string().optional().default(""),
@@ -19,10 +25,9 @@ export const DatacakeApiSettingsSchema = z.object({
   endpoint: z
     .string()
     .trim()
-    .min(1, "Datacake GraphQL endpoint is required")
     .default("https://api.datacake.co/graphql/"),
-  token: z.string().trim().min(1, "API token is required"),
-  workspaceId: z.string().trim().min(1, "Workspace ID is required")
+  token: z.string().trim().default(""),
+  workspaceId: z.string().trim().default("")
 });
 
 export type DatacakeApiSettings = z.infer<typeof DatacakeApiSettingsSchema>;

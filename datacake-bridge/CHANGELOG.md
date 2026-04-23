@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2
+
+- Fix: Docker layer cache could reuse a stale `git clone` from the previous
+  version, defeating the 0.1.1 schema fix. The Dockerfile's clone step now
+  references `BUILD_VERSION` so every version bump guarantees a fresh clone.
+
 ## 0.1.1
 
 - Fix: Supervisor bootstrap no longer crashes on first boot when Datacake

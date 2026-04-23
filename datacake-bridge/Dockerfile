@@ -2,6 +2,12 @@ ARG BUILD_FROM
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM} AS runtime
 
+# BUILD_VERSION is injected by the HA Supervisor from config.yaml's `version:`
+# field. We weave it into the git-clone RUN statement below so Docker's layer
+# cache is invalidated on every addon version bump — without this the
+# Supervisor happily reuses a stale layer that still contains pre-bugfix code.
+ARG BUILD_VERSION=dev
+
 # Git revision of the bridge source to build. Override via `build.yaml`'s
 # `args:` map (e.g. pin to a release tag) or let Supervisor pass it in.
 ARG SOURCE_REF=main
@@ -24,7 +30,8 @@ RUN apk add --no-cache \
 # we wipe at the end.
 WORKDIR /build
 # hadolint ignore=DL3003
-RUN git clone --depth 1 --branch "${SOURCE_REF}" "${SOURCE_REPO}" source \
+RUN echo "Cloning bridge sources for add-on v${BUILD_VERSION} from ${SOURCE_REF}" \
+ && git clone --depth 1 --branch "${SOURCE_REF}" "${SOURCE_REPO}" source \
  && cd source \
  && npm ci \
  && npm run build \

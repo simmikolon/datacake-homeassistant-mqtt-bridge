@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1
+
+- Fix: Supervisor bootstrap no longer crashes on first boot when Datacake
+  credentials are still empty. Schema now permits empty intermediate values;
+  `configService.isConfigured()` remains the runtime gate for actually
+  starting the MQTT pipelines.
+
 ## 0.1.0
 
 Initial release as a Home Assistant add-on.

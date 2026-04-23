@@ -1,6 +1,6 @@
 {
   "name": "datacake-homeassistant-mqtt-bridge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Self-hosted bridge that publishes Datacake devices to Home Assistant via MQTT Discovery.",
   "private": true,
   "type": "commonjs",
